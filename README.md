@@ -3,6 +3,13 @@
 A minimal yet powerful Flask-based web app that lets users **schedule email reminders with a delay**, handled in the background using **Celery** and **Redis**, and sent using **Gmail SMTP**.
 
 ---
+### Preview
+<img src="static/demo1.png" alt="App Screenshot" width="600" height="350"/>
+
+<img src="static/demo2.png" alt="App Screenshot" width="600" height="350"/>
+
+
+---
 
 ## 🚀 Features
 
