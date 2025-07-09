@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Email Reminder App</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="container">
+    <h2>Email Reminder Scheduler</h2>
+
+    <form onsubmit="submitForm(event)">
+      <input type="email" id="email" placeholder="Recipient Email" required />
+      <textarea id="message" placeholder="Reminder message" required></textarea>
+      <input type="number" id="delay" placeholder="Delay in seconds" required />
+      <button type="submit">Schedule</button>
+    </form>
+
+    <p id="response"></p>
+
+    <h3>Scheduled Reminders</h3>
+    <div id="reminder-list"></div>
+  </div>
+
+  <script>
+    async function submitForm(e) {
+      e.preventDefault();
+      const res = await fetch('/schedule-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: document.getElementById('email').value,
+          message: document.getElementById('message').value,
+          delay: document.getElementById('delay').value
+        })
+      });
+      const result = await res.json();
+      document.getElementById('response').textContent = result.message || "Scheduled!";
+      loadReminders(); // Refresh list
+    }
+
+    async function loadReminders() {
+      const res = await fetch('/emails');
+      const data = await res.json();
+      const list = document.getElementById('reminder-list');
+      list.innerHTML = '';
+
+      if (data.length === 0) {
+        list.innerHTML = '<p>No reminders found.</p>';
+        return;
+      }
+
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <tr>
+          <th>Email</th>
+          <th>Message</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      `;
+
+      data.forEach(reminder => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${reminder.email}</td>
+          <td>${reminder.message}</td>
+          <td>${reminder.status}</td>
+          <td><button onclick="deleteReminder(${reminder.id})">Delete</button></td>
+        `;
+        table.appendChild(row);
+      });
+
+      list.appendChild(table);
+    }
+
+    async function deleteReminder(id) {
+      const res = await fetch(`/delete/${id}`);
+      const result = await res.json();
+      document.getElementById('response').textContent = result.message || "Deleted!";
+      loadReminders(); // Refresh list
+    }
+
+    // Load reminders on page load
+    window.onload = loadReminders;
+  </script>
+</body>
+</html>

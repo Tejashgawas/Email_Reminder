@@ -1,0 +1,7 @@
+blinker==1.7.0
+celery==5.3.6
+click==8.1.7
+Flask==2.3.3
+python-dotenv==1.0.1
+redis==5.0.1
+SQLAlchemy==2.0.29

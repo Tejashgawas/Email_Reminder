@@ -1,0 +1,18 @@
+# Virtual environment
+myvene/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+
+# VSCode or IDE folders
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
